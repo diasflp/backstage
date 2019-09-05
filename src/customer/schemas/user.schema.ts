@@ -13,6 +13,12 @@ export const UserSchema = new mongoose.Schema({
     dropDups: true,
     unique: true,
   },
-  photo: { type: String, unique: true },
+  displayName: {
+    type: String,
+    required: true,
+    dropDups: true,
+    unique: true,
+  },
+  avatar: { type: String },
   create: { type: Date, default: Date.now },
 });
