@@ -7,43 +7,46 @@ import { AboutDTO } from '../dto/about.dto';
 @Injectable()
 export class AboutService {
   constructor(
-    @InjectModel('Customer') private readonly aboutModel: Model<About>,
+    @InjectModel('About') private readonly aboutModel: Model<About>,
   ) {}
 
-  // get all description
-  async getAllDescription(): Promise<About[]> {
-    const description = await this.aboutModel.find().exec();
-    return description;
+  // get all about
+  async getAllAbout(): Promise<About[]> {
+    const result = await this.aboutModel
+      .find()
+      .populate('user')
+      .exec();
+    return result;
   }
 
-  // get a single description
-  async getByIdDescription(idDescription: number): Promise<About> {
-    const description = await this.aboutModel.findById(idDescription).exec();
-    return description;
+  // get about from user
+  async getByIdUserAbout(idUser: number): Promise<About> {
+    const result = await this.aboutModel
+      .find({ user: idUser })
+      .select('_id description skill')
+      .exec();
+    return result;
   }
 
-  // post description
-  async postDescription(aboutDTO: AboutDTO): Promise<About> {
-    const newDescription = await this.aboutModel(aboutDTO);
-    return newDescription.save();
+  // post about
+  async postAbout(aboutDTO: AboutDTO): Promise<About> {
+    const result = await this.aboutModel(aboutDTO);
+    return result.save();
   }
 
-  // edit description
-  async updateDescriptio(
-    idDescription: number,
-    aboutDTO: AboutDTO,
-  ): Promise<About> {
-    const description = await this.aboutModel.findByIdAndUpdate(
+  // edit about
+  async updateAbout(idDescription: number, aboutDTO: AboutDTO): Promise<About> {
+    const result = await this.aboutModel.findOneAndUpdate(
       idDescription,
       aboutDTO,
       { new: true },
     );
-    return description;
+    return result;
   }
 
-  // delete description
-  async deleteDescription(idDescription: number): Promise<any> {
-    const description = await this.aboutModel.findByIdAndRemove(idDescription);
-    return description;
+  // delete about
+  async deleteAbout(idDescription: number): Promise<any> {
+    const result = await this.aboutModel.findOneAndDelete(idDescription);
+    return result;
   }
 }

@@ -1,6 +1,6 @@
-import * as mongose from 'mongoose';
+import * as mongoose from 'mongoose';
 
-export const AboutSchema = new mongose.Schema({
+export const AboutSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
@@ -8,5 +8,9 @@ export const AboutSchema = new mongose.Schema({
     unique: true,
   },
   skill: [],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   create: { type: Date, default: Date.now },
 });
