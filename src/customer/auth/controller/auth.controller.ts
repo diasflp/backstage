@@ -32,13 +32,18 @@ export class AuthController {
     jwt.verify(
       req.headers.authorization,
       environment.privateKeyJWT,
-      async (error, encode) => {
+      (error, encode) => {
         if (!encode) {
           throw new UnauthorizedException();
         }
-        const result = await this.userService.getUserByEmail(encode.email);
-        return res.status(HttpStatus.OK).json(result);
+
+        this.sendUser(res, encode.email);
       },
     );
+  }
+
+  private async sendUser(res, email: string) {
+    const result = await this.userService.getUserByEmail(email);
+    return res.status(HttpStatus.OK).json(result);
   }
 }
