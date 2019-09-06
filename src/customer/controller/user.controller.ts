@@ -24,7 +24,12 @@ export class UserController {
   @Post('/postUser')
   @UseFilters(HttpExceptionFilter)
   async postUser(@Res() res, @Body() userDTO: UserDTO) {
-    if (!userDTO.name || !userDTO.email || !userDTO.displayName) {
+    if (
+      !userDTO.name ||
+      !userDTO.email ||
+      !userDTO.displayName ||
+      !userDTO.password
+    ) {
       throw new HttpException('Name already exists.', HttpStatus.BAD_REQUEST);
     }
     const result = await this.userService.postUser(userDTO);

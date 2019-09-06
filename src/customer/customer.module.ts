@@ -6,14 +6,17 @@ import { AboutSchema } from './schemas/about.schema';
 import { UserSchema } from './schemas/user.schema';
 import { UserService } from './services/user.service';
 import { UserController } from './controller/user.controller';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'About', schema: AboutSchema },
     ]),
   ],
+  exports: [UserService],
   controllers: [AboutController, UserController],
   providers: [AboutService, UserService],
 })
