@@ -32,9 +32,11 @@ export class AboutController {
   @Post('/postAbout')
   @UseFilters(HttpExceptionFilter)
   async postAbout(@Res() res, @Req() req, @Body() aboutDTO: AboutDTO) {
+    const token = this.createToken(req);
     const result = await this.aboutService.postAbout(aboutDTO);
     return res.status(HttpStatus.OK).json({
       message: 'About has been created successfully.',
+      token,
       result,
     });
   }
@@ -51,12 +53,13 @@ export class AboutController {
   // Get user about
   @Get('/getAboutUser/:idUser')
   @UseGuards(RolesGuard)
-  async byIdUserAbout(@Res() res, @Param('idUser') idUser) {
+  async byIdUserAbout(@Res() res, @Req() req, @Param('idUser') idUser) {
+    const token = this.createToken(req);
     const result = await this.aboutService.getByIdUserAbout(idUser);
     if (!result) {
       throw new NotFoundException('not found.');
     }
-    return res.status(HttpStatus.OK).json(result);
+    return res.status(HttpStatus.OK).json({ result, token });
   }
 
   // Update about
@@ -65,9 +68,11 @@ export class AboutController {
   @UseGuards(RolesGuard)
   async putAbout(
     @Res() res,
+    @Req() req,
     @Query('idDescription') idDescription,
     @Body() aboutDTO: AboutDTO,
   ) {
+    const token = this.createToken(req);
     const result = await this.aboutService.updateAbout(idDescription, aboutDTO);
     if (!result) {
       throw new NotFoundException('Description does not exist.');
@@ -75,6 +80,7 @@ export class AboutController {
 
     return res.status(HttpStatus.OK).json({
       message: 'About has been successfully updated',
+      token,
       result,
     });
   }
@@ -82,12 +88,18 @@ export class AboutController {
   // Delete about
   @Delete('/deleteAbout')
   @UseGuards(RolesGuard)
-  async deleteAbout(@Res() res, @Query('idDescription') idDescription) {
+  async deleteAbout(
+    @Res() res,
+    @Req() req,
+    @Query('idDescription') idDescription,
+  ) {
+    const token = this.createToken(req);
     const result = await this.aboutService.deleteAbout(idDescription);
     if (!result) {
       throw new NotFoundException('About does not exist.');
     }
     return res.status(HttpStatus.OK).json({
+      token,
       message: 'About has been deleted',
     });
   }

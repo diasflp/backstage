@@ -8,9 +8,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../interfaces/user.interface';
 import { UserDTO } from '../dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  private readonly saltRounds = 10;
+
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   // post a new user
@@ -21,8 +24,14 @@ export class UserService {
       !userDTO.displayName ||
       !userDTO.password
     ) {
-      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Required field not filled in.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+    userDTO.passwordHash = await this.getHash(userDTO.password);
+    // clear password as we don't persist passwords
+    userDTO.password = undefined;
     const result = await this.userModel(userDTO);
     return result.save();
   }
@@ -82,5 +91,14 @@ export class UserService {
     return result;
   }
 
-  private createNewToken() {}
+  async compareHash(
+    password: string | undefined,
+    hash: string | undefined,
+  ): Promise<boolean> {
+    return bcrypt.compare(password, hash);
+  }
+
+  private async getHash(password: string | undefined): Promise<string> {
+    return bcrypt.hash(password, this.saltRounds);
+  }
 }

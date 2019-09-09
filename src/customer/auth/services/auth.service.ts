@@ -17,8 +17,9 @@ export class AuthService {
     const userToAttempt = await this.usersService.findOneByEmail(
       loginAttempt.email,
     );
-    const userPassword = await this.usersService.checkPassword(
+    const userPassword = await this.usersService.compareHash(
       loginAttempt.password,
+      userToAttempt.passwordHash,
     );
     return new Promise(resolve => {
       if (userPassword && userToAttempt) {

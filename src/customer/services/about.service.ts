@@ -32,7 +32,10 @@ export class AboutService {
   // post about
   async postAbout(aboutDTO: AboutDTO): Promise<About> {
     if (!aboutDTO.description) {
-      throw new HttpException('About already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Required field not filled in.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const result = await this.aboutModel(aboutDTO);
     return result.save();

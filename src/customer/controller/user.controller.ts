@@ -12,11 +12,16 @@ import {
   UseGuards,
   Delete,
   NotFoundException,
+  UnauthorizedException,
+  Req,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { UserDTO } from '../dto/user.dto';
 import { HttpExceptionFilter } from '../validator/validator.validator';
 import { RolesGuard } from '../guard/roles.guard';
+import { environment } from '../../environment';
+import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 @Controller('user')
 export class UserController {
@@ -25,8 +30,8 @@ export class UserController {
   // create a new user
   @Post('/postUser')
   @UseFilters(HttpExceptionFilter)
-  @UseGuards(RolesGuard)
   async postUser(@Res() res, @Body() userDTO: UserDTO) {
+    console.log(userDTO);
     const result = await this.userService.postUser(userDTO);
     return res.status(HttpStatus.OK).json({
       message: 'User has been created successfully.',
@@ -36,7 +41,6 @@ export class UserController {
 
   // validate email
   @Get('/validateEmail/:emailUser')
-  @UseGuards(RolesGuard)
   async validateEmail(@Res() res, @Param('emailUser') emailUser) {
     const result = await this.userService.validateEmail(emailUser);
     if (!result) {
@@ -51,10 +55,17 @@ export class UserController {
   @Put('/putUser')
   @UseFilters(HttpExceptionFilter)
   @UseGuards(RolesGuard)
-  async putUser(@Res() res, @Query('userId') userId, @Body() userDTO: UserDTO) {
+  async putUser(
+    @Res() res,
+    @Req() req,
+    @Query('userId') userId,
+    @Body() userDTO: UserDTO,
+  ) {
+    const token = this.createToken(req);
     const result = await this.userService.updateUser(userId, userDTO);
     return res.status(HttpStatus.OK).json({
       message: 'User has been successfully updated',
+      token,
       result,
     });
   }
@@ -62,13 +73,37 @@ export class UserController {
   // delete user
   @Delete('deleteUser')
   @UseGuards(RolesGuard)
-  async deleteUser(@Res() res, @Query('idUser') idUser) {
+  async deleteUser(@Res() res, @Req() req, @Query('idUser') idUser) {
+    const token = this.createToken(req);
     const result = await this.userService.deleteUser(idUser);
     if (!result) {
       throw new NotFoundException('User does note exits.');
     }
     return res.status(HttpStatus.OK).json({
       message: 'User has been deleted',
+      token,
     });
+  }
+
+  // Create a new token
+  private createToken(req) {
+    return jwt.verify(
+      req.headers.authorization,
+      environment.privateKeyJWT,
+      (error, encode) => {
+        if (!encode) {
+          throw new UnauthorizedException();
+        }
+        const data: JwtPayload = {
+          email: encode.email,
+        };
+
+        const newJwt = jwt.sign(data, environment.privateKeyJWT);
+        return {
+          expiresIn: 3600,
+          token: newJwt,
+        };
+      },
+    );
   }
 }
