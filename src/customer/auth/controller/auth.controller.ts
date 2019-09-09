@@ -4,7 +4,6 @@ import {
   Body,
   Req,
   Get,
-  Inject,
   UnauthorizedException,
   Res,
   HttpStatus,
@@ -28,7 +27,7 @@ export class AuthController {
   }
 
   @Get('/user')
-  async validateToken(@Res() res, @Req() req) {
+  async getUser(@Res() res, @Req() req) {
     jwt.verify(
       req.headers.authorization,
       environment.privateKeyJWT,
@@ -36,7 +35,6 @@ export class AuthController {
         if (!encode) {
           throw new UnauthorizedException();
         }
-
         this.sendUser(res, encode.email);
       },
     );

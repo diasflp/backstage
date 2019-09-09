@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../interfaces/user.interface';
 import { UserDTO } from '../dto/user.dto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -11,6 +15,14 @@ export class UserService {
 
   // post a new user
   async postUser(userDTO: UserDTO): Promise<User> {
+    if (
+      !userDTO.name ||
+      !userDTO.email ||
+      !userDTO.displayName ||
+      !userDTO.password
+    ) {
+      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
+    }
     const result = await this.userModel(userDTO);
     return result.save();
   }
@@ -26,9 +38,20 @@ export class UserService {
 
   // update user
   async updateUser(userId: number, userDTO: UserDTO): Promise<User> {
+    if (
+      !userDTO.name ||
+      !userDTO.email ||
+      !userDTO.displayName ||
+      !userDTO.password
+    ) {
+      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
+    }
     const result = await this.userModel.findOneAndUpdate(userId, userDTO, {
       new: true,
     });
+    if (!result) {
+      throw new NotFoundException('User does not exist');
+    }
     return result;
   }
 
@@ -44,12 +67,20 @@ export class UserService {
     return result;
   }
 
-  // get user by email
-  async getUserByEmail(emailUser: string): Promise<User> {
+  // get user from email
+  async getUserByEmail(emailUser: string) {
     const result = await this.userModel
       .find({ email: emailUser })
       .select('_id name displayName email avatar')
       .exec();
     return result;
   }
+
+  // delete user
+  async deleteUser(idUser: number) {
+    const result = await this.userModel.findOneAndDelete(idUser);
+    return result;
+  }
+
+  private createNewToken() {}
 }

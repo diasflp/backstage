@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { About } from '../interfaces/about.interface';
 import { AboutDTO } from '../dto/about.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AboutService {
@@ -30,12 +31,18 @@ export class AboutService {
 
   // post about
   async postAbout(aboutDTO: AboutDTO): Promise<About> {
+    if (!aboutDTO.description) {
+      throw new HttpException('About already exists.', HttpStatus.BAD_REQUEST);
+    }
     const result = await this.aboutModel(aboutDTO);
     return result.save();
   }
 
   // edit about
   async updateAbout(idDescription: number, aboutDTO: AboutDTO): Promise<About> {
+    if (!aboutDTO.description) {
+      throw new HttpException('About already exists.', HttpStatus.BAD_REQUEST);
+    }
     const result = await this.aboutModel.findOneAndUpdate(
       idDescription,
       aboutDTO,

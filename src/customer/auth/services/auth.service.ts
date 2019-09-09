@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  HttpStatus,
-  HttpException,
-} from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '../../dto/login-user.dto';
 import { UserService } from '../../services/user.service';
@@ -35,16 +30,6 @@ export class AuthService {
         );
       }
     });
-  }
-
-  async validateUserByJwt(payload: JwtPayload) {
-    // This will be used when the user has already logged in and has a JWT
-    const user = await this.usersService.findOneByEmail(payload.email);
-    if (user) {
-      return this.createJwtPayload(user);
-    } else {
-      throw new UnauthorizedException();
-    }
   }
 
   createJwtPayload(user: UserDTO) {
