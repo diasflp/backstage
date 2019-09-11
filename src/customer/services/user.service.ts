@@ -48,12 +48,16 @@ export class UserService {
   // update user
   async updateUser(userId: number, userDTO: UserDTO): Promise<User> {
     if (
+      !userId ||
       !userDTO.name ||
       !userDTO.email ||
       !userDTO.displayName ||
       !userDTO.password
     ) {
-      throw new HttpException('User already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Required field not filled in.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const result = await this.userModel.findOneAndUpdate(userId, userDTO, {
       new: true,

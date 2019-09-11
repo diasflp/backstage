@@ -31,7 +31,6 @@ export class UserController {
   @Post('/postUser')
   @UseFilters(HttpExceptionFilter)
   async postUser(@Res() res, @Body() userDTO: UserDTO) {
-    console.log(userDTO);
     const result = await this.userService.postUser(userDTO);
     return res.status(HttpStatus.OK).json({
       message: 'User has been created successfully.',
