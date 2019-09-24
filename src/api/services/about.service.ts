@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { About } from '../interfaces/about.interface';
 import { AboutDTO } from '../dto/about.dto';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AboutService {
