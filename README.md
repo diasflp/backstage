@@ -6,10 +6,10 @@ API to feed any kind of website or any kind of product.
 
 ## Technology Used
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-[Nodejs](https://nodejs.org/en/) Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
-[MongoDB](https://www.mongodb.com/) The database for modern applications
-[Mongoose](https://mongoosejs.com/) Elegant mongodb object modeling for node.js
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.<br/>
+[Nodejs](https://nodejs.org/en/) Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.<br/>
+[MongoDB](https://www.mongodb.com/) The database for modern applications.<br/>
+[Mongoose](https://mongoosejs.com/) Elegant mongodb object modeling for node.js.
 
 ## Installation
 
