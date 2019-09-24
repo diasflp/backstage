@@ -1,3 +1,5 @@
+[![DeepScan grade](https://deepscan.io/api/teams/5504/projects/7338/branches/72406/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=5504&pid=7338&bid=72406)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
