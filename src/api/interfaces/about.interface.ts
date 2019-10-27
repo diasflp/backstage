@@ -6,6 +6,7 @@ export interface About extends Document {
   readonly skill: Skillinterface[];
   readonly created: Date;
   readonly user: User;
+  readonly updateat: Date;
 }
 
 export interface Skillinterface {

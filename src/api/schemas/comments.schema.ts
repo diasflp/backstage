@@ -1,13 +1,15 @@
 import * as mongoose from 'mongoose';
 
-export const AboutSchema = new mongoose.Schema({
-  description: {
+export const CommentsSchema = new mongoose.Schema({
+  comment: {
     type: String,
     required: true,
     dropDups: true,
     unique: true,
   },
-  skill: [],
+  publish: {
+    type: Boolean,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
