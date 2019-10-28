@@ -8,6 +8,8 @@ import { UserService } from './services/user.service';
 import { UserController } from './controller/user.controller';
 import { PassportModule } from '@nestjs/passport';
 import { CommentsSchema } from './schemas/comments.schema';
+import { CommentsController } from './controller/comments.controller';
+import { CommentsService } from './services/comments.service';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { CommentsSchema } from './schemas/comments.schema';
     ]),
   ],
   exports: [UserService],
-  controllers: [AboutController, UserController],
-  providers: [AboutService, UserService],
+  controllers: [AboutController, UserController, CommentsController],
+  providers: [AboutService, UserService, CommentsService],
 })
 export class CustomerModule {}

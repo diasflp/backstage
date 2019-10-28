@@ -94,6 +94,9 @@ export class UserService {
   // delete user
   async deleteUser(idUser: number) {
     const result = await this.userModel.findOneAndDelete(idUser);
+    if (!result) {
+      throw new NotFoundException('User does note exits.');
+    }
     return result;
   }
 

@@ -33,5 +33,15 @@ export const UserSchema = new mongoose.Schema({
   ],
   avatar: { type: String },
   create: { type: Date, default: Date.now },
-  update_at: { type: Date, default: Date.now },
+  updateat: { type: Date, default: Date.now },
+});
+
+UserSchema.pre('update', function(next) {
+  const modifiedField = this.getUpdate().$set.field;
+  if (!modifiedField) {
+    return next();
+  }
+  const now = new Date();
+  this.updatedat = now;
+  next();
 });

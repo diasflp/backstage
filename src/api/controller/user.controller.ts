@@ -19,9 +19,7 @@ import { UserService } from '../services/user.service';
 import { UserDTO } from '../dto/user.dto';
 import { HttpExceptionFilter } from '../validator/validator.validator';
 import { RolesGuard } from '../guard/roles.guard';
-import { environment } from '../../environment';
-import * as jwt from 'jsonwebtoken';
-import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
+import { createJwt } from '../constants/jwt.constants';
 
 @Controller('user')
 export class UserController {
@@ -60,7 +58,7 @@ export class UserController {
     @Query('userId') userId,
     @Body() userDTO: UserDTO,
   ) {
-    const token = this.createToken(req);
+    const token = createJwt(req);
     const result = await this.userService.updateUser(userId, userDTO);
     return res.status(HttpStatus.OK).json({
       message: 'User has been successfully updated',
@@ -73,36 +71,11 @@ export class UserController {
   @Delete('deleteUser')
   @UseGuards(RolesGuard)
   async deleteUser(@Res() res, @Req() req, @Query('idUser') idUser) {
-    const token = this.createToken(req);
-    const result = await this.userService.deleteUser(idUser);
-    if (!result) {
-      throw new NotFoundException('User does note exits.');
-    }
+    const token = createJwt(req);
+    await this.userService.deleteUser(idUser);
     return res.status(HttpStatus.OK).json({
       message: 'User has been deleted',
       token,
     });
-  }
-
-  // Create a new token
-  private createToken(req) {
-    return jwt.verify(
-      req.headers.authorization,
-      environment.privateKeyJWT,
-      (error, encode) => {
-        if (!encode) {
-          throw new UnauthorizedException();
-        }
-        const data: JwtPayload = {
-          email: encode.email,
-        };
-
-        const newJwt = jwt.sign(data, environment.privateKeyJWT);
-        return {
-          expiresIn: 3600,
-          token: newJwt,
-        };
-      },
-    );
   }
 }

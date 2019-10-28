@@ -10,9 +10,4 @@ export interface User extends Document {
   readonly profile: string;
   readonly created: Date;
   readonly updateat: Date;
-  readonly like: LikeInterface[];
-}
-
-export interface LikeInterface {
-  id: number;
 }
