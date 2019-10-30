@@ -16,9 +16,10 @@ export class CommentsService {
   ) {}
 
   // get all comments
-  async getAllComments(): Promise<Comments[]> {
+  async getAllComments(page: number, size: number): Promise<Comments[]> {
     const result = await this.commentsModel
       .find()
+      .skip((page || 0) * (size || 10))
       .populate('user')
       .exec();
     return result;

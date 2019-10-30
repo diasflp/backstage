@@ -16,9 +16,10 @@ export class AboutService {
   ) {}
 
   // get all about
-  async getAllAbout(): Promise<About[]> {
+  async getAllAbout(page: number, size: number): Promise<About[]> {
     const result = await this.aboutModel
       .find()
+      .skip((page || 0) * (size || 10))
       .populate('user')
       .exec();
     return result;
@@ -28,6 +29,7 @@ export class AboutService {
   async getByIdUserAbout(idUser: number): Promise<About> {
     const result = await this.aboutModel
       .find({ user: idUser })
+      .lean()
       .select('_id description skill')
       .exec();
     if (!result) {

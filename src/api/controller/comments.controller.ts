@@ -40,9 +40,14 @@ export class CommentsController {
   // get all comments
   @Get('/getAllComments')
   @UseGuards(RolesGuard)
-  async getAllComments(@Res() res, @Req() req) {
+  async getAllComments(
+    @Res() res,
+    @Req() req,
+    @Param('page') page,
+    @Param('size') size,
+  ) {
     const token = createJwt(req);
-    const result = await this.commentsService.getAllComments();
+    const result = await this.commentsService.getAllComments(page, size);
     return res.status(HttpStatus.OK).json({ result, token });
   }
 

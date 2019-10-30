@@ -40,9 +40,14 @@ export class AboutController {
   // Get all About
   @Get('/getAllAbout')
   @UseGuards(RolesGuard)
-  async getAllAbout(@Res() res, @Req() req) {
+  async getAllAbout(
+    @Res() res,
+    @Req() req,
+    @Param('page') page,
+    @Param('size') size,
+  ) {
     const token = createJwt(req);
-    const result = await this.aboutService.getAllAbout();
+    const result = await this.aboutService.getAllAbout(page, size);
     return res.status(HttpStatus.OK).json({ result, token });
   }
 
