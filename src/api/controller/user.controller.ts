@@ -11,8 +11,6 @@ import {
   Query,
   UseGuards,
   Delete,
-  NotFoundException,
-  UnauthorizedException,
   Req,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
