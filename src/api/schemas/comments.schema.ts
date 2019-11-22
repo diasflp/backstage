@@ -1,13 +1,19 @@
 import * as mongoose from 'mongoose';
 
-export const AboutSchema = new mongoose.Schema({
-  description: {
+export const CommentsSchema = new mongoose.Schema({
+  comment: {
     type: String,
-    required: true,
-    dropDups: true,
     unique: true,
   },
-  skill: [],
+  publish: {
+    type: Boolean,
+  },
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -16,7 +22,7 @@ export const AboutSchema = new mongoose.Schema({
   updateat: { type: Date, default: Date.now },
 });
 
-AboutSchema.pre('update', function(next) {
+CommentsSchema.pre('update', function(next) {
   const modifiedField = this.getUpdate().$set.field;
   if (!modifiedField) {
     return next();

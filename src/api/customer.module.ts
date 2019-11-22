@@ -7,6 +7,9 @@ import { UserSchema } from './schemas/user.schema';
 import { UserService } from './services/user.service';
 import { UserController } from './controller/user.controller';
 import { PassportModule } from '@nestjs/passport';
+import { CommentsSchema } from './schemas/comments.schema';
+import { CommentsController } from './controller/comments.controller';
+import { CommentsService } from './services/comments.service';
 
 @Module({
   imports: [
@@ -14,10 +17,11 @@ import { PassportModule } from '@nestjs/passport';
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },
       { name: 'About', schema: AboutSchema },
+      { name: 'Comments', schema: CommentsSchema },
     ]),
   ],
   exports: [UserService],
-  controllers: [AboutController, UserController],
-  providers: [AboutService, UserService],
+  controllers: [AboutController, UserController, CommentsController],
+  providers: [AboutService, UserService, CommentsService],
 })
 export class CustomerModule {}

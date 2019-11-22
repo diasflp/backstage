@@ -5,5 +5,6 @@ export class AboutDTO {
   readonly description: string;
   readonly skill: Skillinterface[];
   readonly created: Date;
+  readonly updateat: Date;
   readonly user: User;
 }

@@ -22,7 +22,8 @@ export class UserService {
       !userDTO.name ||
       !userDTO.email ||
       !userDTO.displayName ||
-      !userDTO.password
+      !userDTO.password ||
+      !userDTO.profile
     ) {
       throw new HttpException(
         'Required field not filled in.',
@@ -52,7 +53,8 @@ export class UserService {
       !userDTO.name ||
       !userDTO.email ||
       !userDTO.displayName ||
-      !userDTO.password
+      !userDTO.password ||
+      !userDTO.profile
     ) {
       throw new HttpException(
         'Required field not filled in.',
@@ -92,6 +94,9 @@ export class UserService {
   // delete user
   async deleteUser(idUser: number) {
     const result = await this.userModel.findOneAndDelete(idUser);
+    if (!result) {
+      throw new NotFoundException('User does note exits.');
+    }
     return result;
   }
 

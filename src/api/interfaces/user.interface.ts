@@ -7,5 +7,7 @@ export interface User extends Document {
   readonly email: string;
   readonly displayName: string;
   readonly avatar: string;
+  readonly profile: string;
   readonly created: Date;
+  readonly updateat: Date;
 }
